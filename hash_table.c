@@ -1,6 +1,6 @@
 #include "hash_table.h"
 
-/* BKDR�ַ�����ϣ���� */
+/* BKDR字符串哈希函数 */
 static unsigned int hash_key(const char* key) {
     unsigned int seed = 131;
     unsigned int hash = 0;
@@ -108,7 +108,7 @@ Record* hash_find(HashTable* table, const char* student_id, const char* course_i
     return NULL;
 }
 
-/* �޸ļ�¼�ɼ� */
+/* 修改记录成绩 */
 int hash_update(HashTable* table, const char* student_id, const char* course_id, int new_score) {
     Record* rec;
     if (!table || !student_id || !course_id) return ERROR;

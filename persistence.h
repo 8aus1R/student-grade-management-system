@@ -9,16 +9,16 @@
   #include <direct.h>
 #endif
 
-/* ��CSV�ļ��������ݵ����� */
+/* 从CSV文件加载数据到链表 */
 int load_from_csv(LinkedList* list, const char* filename);
 
-/* ���������ݱ��浽CSV�ļ� */
+/* 将链表数据保存到CSV文件 */
 int save_to_csv(LinkedList* list, const char* filename);
 
-/* ȷ��Ŀ¼���ڣ��������򴴽� */
+/* 确保目录存在，不存在则创建 */
 void ensure_directory(const char* dir);
 
-/* ����ɸѡ���������ļ�������Ŀ¼·���������д��buf */
+/* 根据筛选条件生成文件名（含目录路径），结果写入buf */
 void generate_filter_filename(const char* dir,
                               const char* criteria_desc,
                               char* buf, int buf_size);

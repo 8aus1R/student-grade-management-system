@@ -1,6 +1,6 @@
 #include "query.h"
 
-/* ��鵥����¼�Ƿ����ɸѡ���� */
+/* 检查单条记录是否符合筛选条件 */
 static bool match_filter(const Record* rec, const FilterParams* params) {
     if (params->use_course_name) {
         if (params->fuzzy_course) {
@@ -43,7 +43,7 @@ LinkedList* filter_records(LinkedList* source, const FilterParams* params) {
     return result;
 }
 
-/* ���ֶαȽϺ�����������ʹ�ã� */
+/* 多字段比较函数（供快排使用） */
 static int compare_multi(const void* a, const void* b, SortKey* keys, int key_count) {
     const Record* ra = (const Record*)a;
     const Record* rb = (const Record*)b;
@@ -66,7 +66,7 @@ static int compare_multi(const void* a, const void* b, SortKey* keys, int key_co
     return 0;
 }
 
-/* ���׿���ʵ�֣�C89 qsort�޷����Σ��ֶ�ʵ�֣� */
+/* 简易快排实现（C89 qsort无法传参，手动实现） */
 static void quick_sort(Record* arr, int left, int right, SortKey* keys, int key_count) {
     int i, j;
     Record pivot;
@@ -94,9 +94,9 @@ void sort_records(Record* arr, int len, SortKey* keys, int key_count) {
     quick_sort(arr, 0, len-1, keys, key_count);
 }
 
-/* ͳ�ƿγ�ѡ������������ʵ�֣������������ */
+/* 统计课程选课人数（简易实现，用数组遍历） */
 void stat_course_enrollment(LinkedList* list) {
-    /* Ԥ��γ�ͳ�� */
+    /* 预设课程统计 */
     typedef struct {
         char course_id[COURSE_ID_LEN];
         char course_name[MAX_STR_LEN];
@@ -129,14 +129,14 @@ void stat_course_enrollment(LinkedList* list) {
         cur = cur->next;
     }
 
-    printf("\n%-10s %-20s %-8s\n", "�γ̱��", "�γ�����", "ѡ������");
+    printf("\n%-10s %-20s %-8s\n", "课程编号", "课程名称", "选课人数");
     printf("----------------------------------------\n");
     for (i = 0; i < stat_count; i++) {
         printf("%-10s %-20s %-8d\n", stats[i].course_id, stats[i].course_name, stats[i].count);
     }
 }
 
-/* ͳ�Ƴɼ��ֲ� */
+/* 统计成绩分布 */
 void stat_score_distribution(LinkedList* list) {
     int excellent = 0, good = 0, medium = 0, pass = 0, fail = 0;
     ListNode* cur;
@@ -154,10 +154,10 @@ void stat_score_distribution(LinkedList* list) {
         cur = cur->next;
     }
 
-    printf("\n�ɼ��ֲ�ͳ��:\n");
-    printf("����(90-100): %d��\n", excellent);
-    printf("����(80-89):  %d��\n", good);
-    printf("�е�(70-79):  %d��\n", medium);
-    printf("����(60-69):  %d��\n", pass);
-    printf("������(<60):  %d��\n", fail);
+    printf("\n成绩分布统计:\n");
+    printf("优秀(90-100): %d人\n", excellent);
+    printf("良好(80-89):  %d人\n", good);
+    printf("中等(70-79):  %d人\n", medium);
+    printf("及格(60-69):  %d人\n", pass);
+    printf("不及格(<60):  %d人\n", fail);
 }

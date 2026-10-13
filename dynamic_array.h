@@ -4,9 +4,9 @@
 #include "common.h"
 
 typedef struct {
-    Record* data;       /* �洢���� */
-    int size;           /* ��ǰ��¼�� */
-    int capacity;       /* ��ǰ���� */
+    Record* data;       /* 存储数组 */
+    int size;           /* 当前记录数 */
+    int capacity;       /* 当前容量 */
 } DynamicArray;
 
 DynamicArray* darray_create();

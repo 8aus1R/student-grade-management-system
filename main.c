@@ -14,25 +14,25 @@
 static DataStore* store = NULL;
 
 void print_menu(void) {
-    printf("\n===== У԰ѡ�μ�¼����ϵͳ =====\n");
-    printf("��ǰ���ݽṹ: %s\n", ds_type_name(store));
-    printf("1.  ���ɲ�������\n");
-    printf("2.  ���ļ���������\n");
-    printf("3.  �����¼\n");
-    printf("4.  ɾ����¼\n");
-    printf("5.  ���Ҽ�¼\n");
-    printf("6.  ������ɸѡ\n");
-    printf("7.  ͳ�Ʒ���\n");
-    printf("8.  ���ܶԱȲ���\n");
-    printf("9.  �޸ļ�¼\n");
-    printf("10. �г���ǰ��¼\n");
-    printf("11. �л����ݽṹ\n");
-    printf("0.  ���沢�˳�\n");
-    printf("������ѡ��: ");
+    printf("\n===== 校园选课记录管理系统 =====\n");
+    printf("当前数据结构: %s\n", ds_type_name(store));
+    printf("1.  生成测试数据\n");
+    printf("2.  从文件加载数据\n");
+    printf("3.  插入记录\n");
+    printf("4.  删除记录\n");
+    printf("5.  查找记录\n");
+    printf("6.  多条件筛选\n");
+    printf("7.  统计分析\n");
+    printf("8.  性能对比测试\n");
+    printf("9.  修改记录\n");
+    printf("10. 列出当前记录\n");
+    printf("11. 切换数据结构\n");
+    printf("0.  保存并退出\n");
+    printf("请输入选项: ");
 }
 
 /* ====================================================================
- *  ɾ���Ӳ˵�
+ *  删除子菜单
  * ==================================================================== */
 
 static void delete_submenu(void) {
@@ -40,17 +40,17 @@ static void delete_submenu(void) {
     char op[8];
 
     while (1) {
-        printf("\n----- ɾ����¼ -----\n");
-        printf("��ǰ�ṹ: %s����¼��: %d\n", ds_type_name(store), ds_size(store));
-        printf("1. ɾ��������¼����ѧ��+�γ̺ţ�\n");
-        printf("2. ��ѧԺ����ɾ��\n");
-        printf("3. ��ѧ������ɾ��\n");
-        printf("4. ���γ̱������ɾ��\n");
-        printf("5. ��ѧ������ɾ����ɾ��ĳѧ��ȫ��ѡ�Σ�\n");
-        printf("6. ���ɼ���Χ����ɾ��\n");
-        printf("7. ����ɾ�����ڼ�¼\n");
-        printf("0. �������˵�\n");
-        printf("��ѡ��: ");
+        printf("\n----- 删除记录 -----\n");
+        printf("当前结构: %s，记录数: %d\n", ds_type_name(store), ds_size(store));
+        printf("1. 删除单条记录（按学号+课程号）\n");
+        printf("2. 按学院批量删除\n");
+        printf("3. 按学期批量删除\n");
+        printf("4. 按课程编号批量删除\n");
+        printf("5. 按学号批量删除（删除某学生全部选课）\n");
+        printf("6. 按成绩范围批量删除\n");
+        printf("7. 批量删除过期记录\n");
+        printf("0. 返回主菜单\n");
+        printf("请选择: ");
         scanf("%d", &choice);
 
         if (choice == 0) break;
@@ -59,27 +59,27 @@ static void delete_submenu(void) {
 
             case 1: {
                 char sid[ID_LEN], cid[COURSE_ID_LEN];
-                printf("������ѧ�� �γ̱��: ");
+                printf("请输入学号 课程编号: ");
                 scanf("%s %s", sid, cid);
                 if (ds_delete(store, sid, cid) == OK)
-                    printf("ɾ���ɹ�\n");
+                    printf("删除成功\n");
                 else
-                    printf("δ�ҵ���¼\n");
+                    printf("未找到记录\n");
                 break;
             }
 
             case 2: {
                 char college[MAX_STR_LEN];
                 int cnt;
-                printf("������ѧԺ����: ");
+                printf("请输入学院名称: ");
                 scanf("%s", college);
                 cnt = ds_count_by_college(store, college);
-                if (cnt == 0) { printf("δ�ҵ�ƥ���¼\n"); break; }
-                printf("���ҵ� %d ������ [%s] �ļ�¼��ȷ��ɾ����(Y/N): ",
+                if (cnt == 0) { printf("未找到匹配记录\n"); break; }
+                printf("共找到 %d 条属于 [%s] 的记录，确认删除？(Y/N): ",
                        cnt, college);
                 scanf("%7s", op);
                 if (op[0] == 'Y' || op[0] == 'y')
-                    printf("��ɾ�� %d ����¼\n",
+                    printf("已删除 %d 条记录\n",
                            ds_delete_by_college(store, college));
                 break;
             }
@@ -87,15 +87,15 @@ static void delete_submenu(void) {
             case 3: {
                 char semester[SEMESTER_LEN];
                 int cnt;
-                printf("������ѧ��(�� 2024-01): ");
+                printf("请输入学期(如 2024-01): ");
                 scanf("%s", semester);
                 cnt = ds_count_by_semester(store, semester);
-                if (cnt == 0) { printf("δ�ҵ�ƥ���¼\n"); break; }
-                printf("���ҵ� %d �� [%s] ѧ�ڵļ�¼��ȷ��ɾ����(Y/N): ",
+                if (cnt == 0) { printf("未找到匹配记录\n"); break; }
+                printf("共找到 %d 条 [%s] 学期的记录，确认删除？(Y/N): ",
                        cnt, semester);
                 scanf("%7s", op);
                 if (op[0] == 'Y' || op[0] == 'y')
-                    printf("��ɾ�� %d ����¼\n",
+                    printf("已删除 %d 条记录\n",
                            ds_delete_by_semester(store, semester));
                 break;
             }
@@ -103,15 +103,15 @@ static void delete_submenu(void) {
             case 4: {
                 char cid[COURSE_ID_LEN];
                 int cnt;
-                printf("������γ̱��: ");
+                printf("请输入课程编号: ");
                 scanf("%s", cid);
                 cnt = ds_count_by_course(store, cid);
-                if (cnt == 0) { printf("δ�ҵ�ƥ���¼\n"); break; }
-                printf("���ҵ� %d ���γ� [%s] �ļ�¼��ȷ��ɾ����(Y/N): ",
+                if (cnt == 0) { printf("未找到匹配记录\n"); break; }
+                printf("共找到 %d 条课程 [%s] 的记录，确认删除？(Y/N): ",
                        cnt, cid);
                 scanf("%7s", op);
                 if (op[0] == 'Y' || op[0] == 'y')
-                    printf("��ɾ�� %d ����¼\n",
+                    printf("已删除 %d 条记录\n",
                            ds_delete_by_course(store, cid));
                 break;
             }
@@ -119,35 +119,35 @@ static void delete_submenu(void) {
             case 5: {
                 char sid[ID_LEN];
                 int cnt;
-                printf("������ѧ��: ");
+                printf("请输入学号: ");
                 scanf("%s", sid);
                 cnt = ds_count_by_student(store, sid);
-                if (cnt == 0) { printf("δ�ҵ�ƥ���¼\n"); break; }
-                printf("���ҵ�ѧ�� [%s] �� %d ��ѡ�μ�¼��ȷ��ȫ��ɾ����(Y/N): ",
+                if (cnt == 0) { printf("未找到匹配记录\n"); break; }
+                printf("共找到学生 [%s] 的 %d 条选课记录，确认全部删除？(Y/N): ",
                        sid, cnt);
                 scanf("%7s", op);
                 if (op[0] == 'Y' || op[0] == 'y')
-                    printf("��ɾ�� %d ����¼\n",
+                    printf("已删除 %d 条记录\n",
                            ds_delete_by_student(store, sid));
                 break;
             }
 
             case 6: {
                 int min_s, max_s, cnt;
-                printf("��������ͷ�: ");
+                printf("请输入最低分: ");
                 scanf("%d", &min_s);
-                printf("��������߷�: ");
+                printf("请输入最高分: ");
                 scanf("%d", &max_s);
                 if (min_s > max_s) {
                     int tmp = min_s; min_s = max_s; max_s = tmp;
                 }
                 cnt = ds_count_by_score(store, min_s, max_s);
-                if (cnt == 0) { printf("δ�ҵ�ƥ���¼\n"); break; }
-                printf("���ҵ� %d ���ɼ��� [%d-%d] �ļ�¼��ȷ��ɾ����(Y/N): ",
+                if (cnt == 0) { printf("未找到匹配记录\n"); break; }
+                printf("共找到 %d 条成绩在 [%d-%d] 的记录，确认删除？(Y/N): ",
                        cnt, min_s, max_s);
                 scanf("%7s", op);
                 if (op[0] == 'Y' || op[0] == 'y')
-                    printf("��ɾ�� %d ����¼\n",
+                    printf("已删除 %d 条记录\n",
                            ds_delete_by_score(store, min_s, max_s));
                 break;
             }
@@ -156,7 +156,7 @@ static void delete_submenu(void) {
                 char base_date[DATE_LEN];
                 char input_buf[DATE_LEN + 2];
                 int len, cnt, years;
-                printf("�������׼����(YYYY-MM-DD��ֱ�ӻس�ʹ��Ĭ��2026-09-01): ");
+                printf("请输入基准日期(YYYY-MM-DD，直接回车使用默认2026-09-01): ");
                 getchar();
                 fgets(input_buf, sizeof(input_buf), stdin);
                 len = strlen(input_buf);
@@ -166,11 +166,11 @@ static void delete_submenu(void) {
                     strcpy(base_date, "2026-09-01");
                 } else {
                     if (!is_valid_date(input_buf)) {
-                        printf("���ڸ�ʽ����\n"); break;
+                        printf("日期格式错误\n"); break;
                     }
                     strcpy(base_date, input_buf);
                 }
-                printf("�������������(ֱ�ӻس�Ĭ��3��): ");
+                printf("请输入过期年限(直接回车默认3年): ");
                 fgets(input_buf, sizeof(input_buf), stdin);
                 len = strlen(input_buf);
                 if (len > 0 && input_buf[len - 1] == '\n')
@@ -179,32 +179,32 @@ static void delete_submenu(void) {
                 if (years <= 0) years = 3;
 
                 cnt = ds_count_expired(store, base_date, years);
-                printf("��׼����: %s��ɾ�� %d ��ǰ�ļ�¼���� %d ��",
+                printf("基准日期: %s，删除 %d 年前的记录，共 %d 条",
                        base_date, years, cnt);
-                if (cnt == 0) { printf("\n����ɾ��\n"); break; }
-                printf("��ȷ��ɾ����(Y/N): ");
+                if (cnt == 0) { printf("\n无需删除\n"); break; }
+                printf("，确认删除？(Y/N): ");
                 scanf("%7s", op);
                 if (op[0] == 'Y' || op[0] == 'y')
-                    printf("��ɾ�� %d �����ڼ�¼\n",
+                    printf("已删除 %d 条过期记录\n",
                            ds_delete_expired(store, base_date, years));
                 break;
             }
 
             default:
-                printf("��Чѡ��\n");
+                printf("无效选项\n");
         }
     }
 }
 
 /* ====================================================================
- *  ������
+ *  主函数
  * ==================================================================== */
 
 int main(void) {
     int choice;
 
     store = ds_create(STORE_LINKED_LIST);
-    if (!store) { printf("��ʼ��ʧ��\n"); return 1; }
+    if (!store) { printf("初始化失败\n"); return 1; }
 
     while (1) {
         print_menu();
@@ -215,13 +215,13 @@ int main(void) {
             case 1: {
                 int n, count, i;
                 Record* recs;
-                printf("��������������: ");
+                printf("请输入生成数量: ");
                 scanf("%d", &n);
                 count = 0;
                 recs = generate_records(n, &count);
                 for (i = 0; i < count; i++) ds_insert(store, &recs[i]);
                 free_records(recs);
-                printf("�ɹ����� %d ����¼����ǰ�ṹ: %s��\n",
+                printf("成功生成 %d 条记录（当前结构: %s）\n",
                        ds_size(store), ds_type_name(store));
                 break;
             }
@@ -233,29 +233,29 @@ int main(void) {
                 temp = list_create();
                 n = load_from_csv(temp, DATA_FILE);
                 if (n <= 0) {
-                    printf("����ʧ�ܻ��ļ�Ϊ��\n");
+                    printf("加载失败或文件为空\n");
                     list_destroy(temp); break;
                 }
                 cur = temp->head;
                 while (cur) { ds_insert(store, &cur->data); cur = cur->next; }
                 list_destroy(temp);
-                printf("������ɣ��� %d ����¼����ǰ�ṹ: %s��\n",
+                printf("加载完成，共 %d 条记录（当前结构: %s）\n",
                        ds_size(store), ds_type_name(store));
                 break;
             }
 
             case 3: {
                 Record rec;
-                printf("������ѧ�� �γ̱�� �ɼ�: ");
+                printf("请输入学号 课程编号 成绩: ");
                 scanf("%s %s %d", rec.student_id, rec.course_id, &rec.score);
-                strcpy(rec.name, "����ѧ��");
-                strcpy(rec.college, "�����ѧԺ");
-                strcpy(rec.course_name, "���ݽṹ");
+                strcpy(rec.name, "测试学生");
+                strcpy(rec.college, "计算机学院");
+                strcpy(rec.course_name, "数据结构");
                 rec.credit = 3.0f;
                 strcpy(rec.semester, "2025-02");
                 strcpy(rec.select_date, "2025-09-01");
-                if (ds_insert(store, &rec) == OK) printf("����ɹ�\n");
-                else printf("����ʧ��\n");
+                if (ds_insert(store, &rec) == OK) printf("插入成功\n");
+                else printf("插入失败\n");
                 break;
             }
 
@@ -266,11 +266,11 @@ int main(void) {
             case 5: {
                 char sid[ID_LEN], cid[COURSE_ID_LEN];
                 Record* rec;
-                printf("������ѧ�� �γ̱��: ");
+                printf("请输入学号 课程编号: ");
                 scanf("%s %s", sid, cid);
                 rec = ds_find(store, sid, cid);
-                if (rec) { printf("\n�ҵ���¼:\n"); print_record(rec); }
-                else printf("δ�ҵ���¼\n");
+                if (rec) { printf("\n找到记录:\n"); print_record(rec); }
+                else printf("未找到记录\n");
                 break;
             }
 
@@ -290,49 +290,49 @@ int main(void) {
                 memset(&params, 0, sizeof(FilterParams));
                 memset(desc_buf, 0, sizeof(desc_buf));
 
-                printf("\n--- ������ɸѡ ---\n");
+                printf("\n--- 多条件筛选 ---\n");
 
-                printf("�Ƿ񰴿γ�����ɸѡ��(1-�� / 0-��): ");
+                printf("是否按课程名称筛选？(1-是 / 0-否): ");
                 scanf("%d", &sub_choice);
                 if (sub_choice) {
                     params.use_course_name = 1;
-                    printf("�Ƿ�ģ��ƥ�䣿(1-�� / 0-��): ");
+                    printf("是否模糊匹配？(1-是 / 0-否): ");
                     scanf("%d", &sub_choice);
                     params.fuzzy_course = sub_choice ? 1 : 0;
-                    printf("������γ�����: ");
+                    printf("请输入课程名称: ");
                     scanf("%s", params.course_name);
                     desc_len += sprintf(desc_buf + desc_len,
                                         "C%s_", params.course_name);
                 }
 
-                printf("�Ƿ�ѧ��ɸѡ��(1-�� / 0-��): ");
+                printf("是否按学期筛选？(1-是 / 0-否): ");
                 scanf("%d", &sub_choice);
                 if (sub_choice) {
                     params.use_semester = 1;
-                    printf("������ѧ��(�� 2024-01): ");
+                    printf("请输入学期(如 2024-01): ");
                     scanf("%s", params.semester);
                     desc_len += sprintf(desc_buf + desc_len,
                                         "S%s_", params.semester);
                 }
 
-                printf("�Ƿ񰴳ɼ���Χɸѡ��(1-�� / 0-��): ");
+                printf("是否按成绩范围筛选？(1-是 / 0-否): ");
                 scanf("%d", &sub_choice);
                 if (sub_choice) {
                     params.use_score_range = 1;
-                    printf("��������ͷ�: ");
+                    printf("请输入最低分: ");
                     scanf("%d", &params.score_min);
-                    printf("��������߷�: ");
+                    printf("请输入最高分: ");
                     scanf("%d", &params.score_max);
                     desc_len += sprintf(desc_buf + desc_len,
                                         "R%d-%d_",
                                         params.score_min, params.score_max);
                 }
 
-                printf("�Ƿ�ѧԺɸѡ��(1-�� / 0-��): ");
+                printf("是否按学院筛选？(1-是 / 0-否): ");
                 scanf("%d", &sub_choice);
                 if (sub_choice) {
                     params.use_college = 1;
-                    printf("������ѧԺ����: ");
+                    printf("请输入学院名称: ");
                     scanf("%s", params.college);
                     desc_len += sprintf(desc_buf + desc_len,
                                         "G%s_", params.college);
@@ -342,23 +342,23 @@ int main(void) {
                 result = filter_records(source, &params);
                 list_destroy(source);
 
-                if (!result) { printf("ɸѡʧ��\n"); break; }
-                printf("\nɸѡ����� %d ����¼\n", list_size(result));
+                if (!result) { printf("筛选失败\n"); break; }
+                printf("\n筛选结果共 %d 条记录\n", list_size(result));
                 if (list_size(result) == 0) {
                     list_destroy(result); break;
                 }
 
-                printf("�Ƿ�����(1-�� / 0-��): ");
+                printf("是否排序？(1-是 / 0-否): ");
                 scanf("%d", &sub_choice);
                 if (sub_choice && list_size(result) > 1) {
-                    printf("��ѡ�����ֶ�: score / student_id / course_id\n");
-                    printf("����������ؼ�������(1-3): ");
+                    printf("可选排序字段: score / student_id / course_id\n");
+                    printf("请输入排序关键字数量(1-3): ");
                     scanf("%d", &key_count);
                     if (key_count > 3) key_count = 3;
                     for (i = 0; i < key_count; i++) {
-                        printf("��%d�������ֶ���: ", i + 1);
+                        printf("第%d个排序字段名: ", i + 1);
                         scanf("%s", keys[i].field);
-                        printf("����(1-�� / 0-��): ");
+                        printf("降序？(1-是 / 0-否): ");
                         scanf("%d", &sub_choice);
                         keys[i].descending = sub_choice ? 1 : 0;
                     }
@@ -370,28 +370,28 @@ int main(void) {
                         sort_records(arr, list_size(result), keys, key_count);
                         is_sorted = 1;
                         printf("\n%-12s %-8s %-20s %-8s %-20s %4s %-7s %-10s %4s\n",
-                               "ѧ��","����","ѧԺ","�γ̺�","�γ���",
-                               "ѧ��","ѧ��","ѡ������","�ɼ�");
+                               "学号","姓名","学院","课程号","课程名",
+                               "学分","学期","选课日期","成绩");
                         for (i = 0; i < list_size(result); i++)
                             print_record(&arr[i]);
                     }
                 } else {
                     printf("\n%-12s %-8s %-20s %-8s %-20s %4s %-7s %-10s %4s\n",
-                           "ѧ��","����","ѧԺ","�γ̺�","�γ���",
-                           "ѧ��","ѧ��","ѡ������","�ɼ�");
+                           "学号","姓名","学院","课程号","课程名",
+                           "学分","学期","选课日期","成绩");
                     list_traverse(result, print_record);
                 }
 
-                printf("\n�Ƿ񱣴�ɸѡ������ļ���(1-�� / 0-��): ");
+                printf("\n是否保存筛选结果到文件？(1-是 / 0-否): ");
                 scanf("%d", &sub_choice);
                 if (sub_choice) {
                     char save_path[512];
                     char filename[256];
                     ensure_directory(FILTER_DIR);
-                    printf("���淽ʽ: 1.�Զ������ļ���  2.�ֶ������ļ���\n��ѡ��: ");
+                    printf("保存方式: 1.自动生成文件名  2.手动输入文件名\n请选择: ");
                     scanf("%d", &sub_choice);
                     if (sub_choice == 2) {
-                        printf("�������ļ���(��·��): ");
+                        printf("请输入文件名(含路径): ");
                         scanf("%s", save_path);
                     } else {
                         if (desc_len > 0 && desc_buf[desc_len - 1] == '_')
@@ -411,7 +411,7 @@ int main(void) {
                     } else {
                         save_to_csv(result, save_path);
                     }
-                    printf("ɸѡ����ѱ�����: %s\n", save_path);
+                    printf("筛选结果已保存至: %s\n", save_path);
                 }
 
                 if (is_sorted && arr) free(arr);
@@ -422,7 +422,7 @@ int main(void) {
             case 7: {
                 int sub;
                 LinkedList* temp;
-                printf("\n1. �γ�ѡ������ͳ��\n2. �ɼ��ֲ�ͳ��\n��ѡ��: ");
+                printf("\n1. 课程选课人数统计\n2. 成绩分布统计\n请选择: ");
                 scanf("%d", &sub);
                 temp = ds_export_to_list(store);
                 if (sub == 1) stat_course_enrollment(temp);
@@ -433,7 +433,7 @@ int main(void) {
 
             case 8: {
                 int size;
-                printf("������������ݹ�ģ(100/1000/10000/100000): ");
+                printf("请输入测试数据规模(100/1000/10000/100000): ");
                 scanf("%d", &size);
                 run_performance_test(size);
                 break;
@@ -442,17 +442,17 @@ int main(void) {
             case 9: {
                 char sid[ID_LEN], cid[COURSE_ID_LEN];
                 Record* rec;
-                printf("\n--- �޸ļ�¼ ---\n");
-                printf("������ѧ��: ");
+                printf("\n--- 修改记录 ---\n");
+                printf("请输入学号: ");
                 scanf("%s", sid);
-                printf("������γ̱��: ");
+                printf("请输入课程编号: ");
                 scanf("%s", cid);
                 rec = ds_find(store, sid, cid);
-                if (!rec) { printf("δ�ҵ��ü�¼\n"); break; }
+                if (!rec) { printf("未找到该记录\n"); break; }
                 if (modify_record_interactive(rec))
-                    printf("\n��¼�޸ĳɹ�\n");
+                    printf("\n记录修改成功\n");
                 else
-                    printf("\nδ���κ��޸�\n");
+                    printf("\n未做任何修改\n");
                 break;
             }
 
@@ -464,11 +464,11 @@ int main(void) {
                 int arr_count;
 
                 total = ds_size(store);
-                if (total == 0) { printf("\n��ǰ���κμ�¼\n"); break; }
+                if (total == 0) { printf("\n当前无任何记录\n"); break; }
 
-                printf("\n��ǰ�� %d ����¼�����ݽṹ: %s��\n",
+                printf("\n当前共 %d 条记录（数据结构: %s）\n",
                        total, ds_type_name(store));
-                printf("������ÿҳ��ʾ����(ֱ�ӻس�Ĭ��20): ");
+                printf("请输入每页显示条数(直接回车默认20): ");
                 getchar();
                 fgets(input, sizeof(input), stdin);
                 if (input[0] == '\n' || input[0] == '\0') page_size = 20;
@@ -479,7 +479,7 @@ int main(void) {
 
                 arr = ds_export_array(store, &arr_count);
                 if (!arr || arr_count <= 0) {
-                    printf("����ʧ��\n");
+                    printf("导出失败\n");
                     if (arr) free(arr);
                     break;
                 }
@@ -489,23 +489,23 @@ int main(void) {
                     end_idx = start_idx + page_size;
                     if (end_idx > arr_count) end_idx = arr_count;
 
-                    printf("\n===== �� %d / %d ҳ���� %d - %d ������ %d ����=====\n",
+                    printf("\n===== 第 %d / %d 页（第 %d - %d 条，共 %d 条）=====\n",
                            current_page, total_pages,
                            start_idx + 1, end_idx, arr_count);
                     printf("%-12s %-8s %-20s %-8s %-20s %4s %-7s %-10s %4s\n",
-                           "ѧ��","����","ѧԺ","�γ̺�","�γ���",
-                           "ѧ��","ѧ��","ѡ������","�ɼ�");
+                           "学号","姓名","学院","课程号","课程名",
+                           "学分","学期","选课日期","成绩");
                     printf("------------------------------------------------------------"
                            "-----------------------------------------------\n");
                     for (i = start_idx; i < end_idx; i++)
                         print_record(&arr[i]);
 
                     printf("\n--- ");
-                    if (current_page > 1) printf("��һҳ:P  ");
-                    printf("��ת:G  ");
-                    if (current_page < total_pages) printf("��һҳ:N  ");
-                    printf("�˳�:Q ---\n");
-                    printf("���������: ");
+                    if (current_page > 1) printf("上一页:P  ");
+                    printf("跳转:G  ");
+                    if (current_page < total_pages) printf("下一页:N  ");
+                    printf("退出:Q ---\n");
+                    printf("请输入操作: ");
                     scanf("%s", input);
 
                     if (input[0] == 'Q' || input[0] == 'q') break;
@@ -515,12 +515,12 @@ int main(void) {
                              && current_page > 1) current_page--;
                     else if (input[0] == 'G' || input[0] == 'g') {
                         int target;
-                        printf("������Ŀ��ҳ��(1-%d): ", total_pages);
+                        printf("请输入目标页码(1-%d): ", total_pages);
                         scanf("%d", &target);
                         if (target >= 1 && target <= total_pages)
                             current_page = target;
-                        else printf("ҳ�볬����Χ\n");
-                    } else printf("��Ч����\n");
+                        else printf("页码超出范围\n");
+                    } else printf("无效操作\n");
                 }
                 free(arr);
                 break;
@@ -528,37 +528,37 @@ int main(void) {
 
             case 11: {
                 int new_type;
-                printf("\n--- �л����ݽṹ ---\n");
-                printf("��ǰ�ṹ: %s\n", ds_type_name(store));
-                printf("1. ������˫��������\n");
-                printf("2. AVL������ƽ�������������\n");
-                printf("3. ��ϣ������������\n");
-                printf("4. ��̬���飨��������+���ֲ��ң�\n");
-                printf("0. ȡ��\n");
-                printf("��ѡ��: ");
+                printf("\n--- 切换数据结构 ---\n");
+                printf("当前结构: %s\n", ds_type_name(store));
+                printf("1. 链表（双向链表）\n");
+                printf("2. AVL树（自平衡二叉搜索树）\n");
+                printf("3. 哈希表（拉链法）\n");
+                printf("4. 动态数组（有序数组+二分查找）\n");
+                printf("0. 取消\n");
+                printf("请选择: ");
                 scanf("%d", &new_type);
 
-                if (new_type == 0) { printf("��ȡ��\n"); break; }
-                if (new_type < 1 || new_type > 4) { printf("��Чѡ��\n"); break; }
+                if (new_type == 0) { printf("已取消\n"); break; }
+                if (new_type < 1 || new_type > 4) { printf("无效选项\n"); break; }
                 if ((enum StoreType)new_type == store->type) {
-                    printf("��ǰ���� %s�������л�\n", ds_type_name(store));
+                    printf("当前已是 %s，无需切换\n", ds_type_name(store));
                     break;
                 }
 
-                printf("���ڽ� %d ����¼�� %s Ǩ�Ƶ� ",
+                printf("正在将 %d 条记录从 %s 迁移到 ",
                        ds_size(store), ds_type_name(store));
                 switch (new_type) {
-                    case 1: printf("����...\n"); break;
-                    case 2: printf("AVL��...\n"); break;
-                    case 3: printf("��ϣ��...\n"); break;
-                    case 4: printf("��̬����...\n"); break;
+                    case 1: printf("链表...\n"); break;
+                    case 2: printf("AVL树...\n"); break;
+                    case 3: printf("哈希表...\n"); break;
+                    case 4: printf("动态数组...\n"); break;
                 }
 
                 if (ds_switch_type(store, (enum StoreType)new_type) == OK)
-                    printf("�л��ɹ�����ǰ�ṹ: %s����¼��: %d\n",
+                    printf("切换成功，当前结构: %s，记录数: %d\n",
                            ds_type_name(store), ds_size(store));
                 else
-                    printf("�л�ʧ��\n");
+                    printf("切换失败\n");
                 break;
             }
 
@@ -568,12 +568,12 @@ int main(void) {
                 save_to_csv(temp, DATA_FILE);
                 list_destroy(temp);
                 ds_destroy(store);
-                printf("�����ѱ��棬�����˳�\n");
+                printf("数据已保存，程序退出\n");
                 return 0;
             }
 
             default:
-                printf("��Чѡ��\n");
+                printf("无效选项\n");
         }
     }
 }

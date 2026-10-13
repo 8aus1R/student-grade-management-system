@@ -8,12 +8,12 @@
 #define false 0
 
 #define MAX_STR_LEN 128
-#define ID_LEN 13       /* 12λѧ��+������ */
-#define COURSE_ID_LEN 9 /* 8λ�γ̺�+������ */
+#define ID_LEN 13       /* 12位学号+结束符 */
+#define COURSE_ID_LEN 9 /* 8位课程号+结束符 */
 #define DATE_LEN 11     /* YYYY-MM-DD */
 #define SEMESTER_LEN 8  /* YYYY-XX */
 
-/* ѡ�μ�¼�ṹ�� */
+/* 选课记录结构体 */
 typedef struct {
     char student_id[ID_LEN];
     char name[MAX_STR_LEN];
@@ -26,7 +26,7 @@ typedef struct {
     int score;
 } Record;
 
-/* ״̬�� */
+/* 状态码 */
 enum Status {
     OK = 0,
     ERROR = -1,
@@ -34,7 +34,7 @@ enum Status {
     DUPLICATE = -3
 };
 
-/* �޸��ֶ�ѡ�� */
+/* 修改字段选项 */
 enum ModifyField {
     MODIFY_SCORE = 1,
     MODIFY_SEMESTER = 2,
@@ -44,17 +44,17 @@ enum ModifyField {
     MODIFY_COURSE_NAME = 6
 };
 
-/* ���ߺ������� */
+/* 工具函数声明 */
 int date_compare(const char* date1, const char* date2);
 bool fuzzy_match(const char* source, const char* pattern);
 void print_record(const Record* rec);
 int record_key_compare(const Record* a, const Record* b);
 char* get_record_key(const Record* rec, char* key_buf);
 
-/* У�����ڸ�ʽ�Ƿ�Ϸ���YYYY-MM-DD�� */
+/* 校验日期格式是否合法（YYYY-MM-DD） */
 bool is_valid_date(const char* date);
 
-/* ����ʽ�޸ļ�¼�ֶ� */
+/* 交互式修改记录字段 */
 bool modify_record_interactive(Record* rec);
 
 #endif

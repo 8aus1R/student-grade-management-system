@@ -1,26 +1,26 @@
 #include "data_generator.h"
 #include <math.h>
 
-/* Ԥ�����ݳأ����ϡ����ָ�Ϊ�ַ������� */
+/* 预设数据池：姓氏、名字改为字符串数组 */
 static const char* surnames[] = {
-    "��","Ǯ","��","��","��","��","֣","��",
-    "��","��","��","��","��","��","��","��",
-    "��","��","��","��","��","��","ʩ","��"
+    "赵","钱","孙","李","周","吴","郑","王",
+    "冯","陈","褚","卫","蒋","沈","韩","杨",
+    "朱","秦","尤","许","何","吕","施","张"
 };
-/* �Զ������������� */
+/* 自动计算姓氏总数 */
 static const int surname_count = sizeof(surnames) / sizeof(surnames[0]);
 
 static const char* names[] = {
-    "ΰ","��","��","��","��","��","ǿ","��",
-    "��","��","��","��","��","��","��","��",
-    "��","��","��","ϼ","ƽ","��","��","Ӣ"
+    "伟","芳","娜","敏","静","丽","强","磊",
+    "军","洋","勇","艳","杰","娟","涛","明",
+    "超","秀","兰","霞","平","刚","桂","英"
 };
-/* �Զ������������� */
+/* 自动计算名字总数 */
 static const int name_count = sizeof(names) / sizeof(names[0]);
 
 static const char* colleges[] = {
-    "�������ѧ�빤��ѧԺ", "��ѧ��ͳ��ѧԺ", "������Ϣ����ѧԺ",
-    "��е����ѧԺ", "���ù���ѧԺ", "�����ѧԺ", "��ľ����ѧԺ"
+    "计算机科学与工程学院", "数学与统计学院", "电子信息工程学院",
+    "机械工程学院", "经济管理学院", "外国语学院", "土木工程学院"
 };
 static const int college_count = 7;
 
@@ -29,18 +29,18 @@ static const char* course_ids[] = {
     "EE200207", "ME100509", "EC300104", "FL200308"
 };
 static const char* course_names[] = {
-    "���ݽṹ���㷨", "����ϵͳԭ��", "���ݿ�ϵͳԭ��", "�ߵ���ѧ",
-    "ģ����Ӽ���", "��е��ƻ���", "΢�۾���ѧ", "��ѧӢ��"
+    "数据结构与算法", "操作系统原理", "数据库系统原理", "高等数学",
+    "模拟电子技术", "机械设计基础", "微观经济学", "大学英语"
 };
 static const float credits[] = {3.5f, 3.0f, 3.0f, 4.0f, 3.0f, 3.5f, 2.5f, 2.0f};
 static const int course_count = 8;
 
-/* ����������� [min, max] */
+/* 生成随机整数 [min, max] */
 static int rand_int(int min, int max) {
     return min + rand() % (max - min + 1);
 }
 
-/* ������̬�ֲ��ɼ�����ֵ75����׼��12�� */
+/* 生成正态分布成绩（均值75，标准差12） */
 static int rand_score() {
     double u1, u2, z;
     int score;
@@ -53,12 +53,12 @@ static int rand_score() {
     return score;
 }
 
-/* ����������� */
+/* 生成随机日期 */
 static void rand_date(char* buf, int year_min, int year_max) {
     int year, month, day;
     year = rand_int(year_min, year_max);
     month = rand_int(1, 12);
-    day = rand_int(1, 28); /* �򻯴��� */
+    day = rand_int(1, 28); /* 简化处理 */
     sprintf(buf, "%04d-%02d-%02d", year, month, day);
 }
 
@@ -85,20 +85,20 @@ Record* generate_records(int count, int* actual_count) {
         int enroll_year, college_code;
         int col_idx, c_idx;
         int year, sem;
-        /* ����������ر����������ڿ鿪ͷ */
+        /* 姓名生成相关变量，声明在块开头 */
         int s_idx, n1_idx, n2_idx;
 
-        /* ѧ�ţ�4λ��� + 2λѧԺ�� + 6λ��� */
+        /* 学号：4位年份 + 2位学院码 + 6位序号 */
         enroll_year = rand_int(2020, 2025);
         college_code = rand_int(1, college_count);
         sprintf(records[i].student_id, "%04d%02d%06d", enroll_year, college_code, seq++);
 
-        /* ---------- �޸ĺ��ģ����������߼� ---------- */
+        /* ---------- 修改核心：姓名生成逻辑 ---------- */
         s_idx = rand_int(0, surname_count - 1);
         n1_idx = rand_int(0, name_count - 1);
-        /* ��ƴ������ */
+        /* 先拼接姓氏 */
         strcpy(records[i].name, surnames[s_idx]);
-        /* ������ɵ�������˫���� */
+        /* 随机生成单字名或双字名 */
         if (rand() % 2) {
             n2_idx = rand_int(0, name_count - 1);
             strcat(records[i].name, names[n1_idx]);
@@ -107,25 +107,25 @@ Record* generate_records(int count, int* actual_count) {
             strcat(records[i].name, names[n1_idx]);
         }
 
-        /* ѧԺ */
+        /* 学院 */
         col_idx = college_code - 1;
         strcpy(records[i].college, colleges[col_idx]);
 
-        /* �γ� */
+        /* 课程 */
         c_idx = rand_int(0, course_count - 1);
         strcpy(records[i].course_id, course_ids[c_idx]);
         strcpy(records[i].course_name, course_names[c_idx]);
         records[i].credit = credits[c_idx];
 
-        /* ѧ�� */
+        /* 学期 */
         year = rand_int(2020, 2026);
         sem = rand_int(1, 2);
         sprintf(records[i].semester, "%04d-%02d", year, sem);
 
-        /* ѡ������ */
+        /* 选课日期 */
         rand_date(records[i].select_date, 2020, 2026);
 
-        /* �ɼ� */
+        /* 成绩 */
         records[i].score = rand_score();
     }
 

@@ -5,7 +5,7 @@
 #include "dynamic_array.h"
 
 /* ====================================================================
- *  ȫ�������ı��������̰߳�ȫ��
+ *  全局上下文变量（单线程安全）
  * ==================================================================== */
 
 static LinkedList* g_collect_list  = NULL;
@@ -28,7 +28,7 @@ static int      g_kidx = 0;
 static int      g_kcap = 0;
 
 /* ====================================================================
- *  ��ֵ�ռ�����
+ *  键值收集辅助
  * ==================================================================== */
 
 static void key_collect(const Record* rec) {
@@ -61,7 +61,7 @@ static void keys_cleanup(void) {
 }
 
 /* ====================================================================
- *  �����ص�����
+ *  遍历回调函数
  * ==================================================================== */
 
 static void cb_collect_to_list(const Record* rec) {
@@ -126,7 +126,7 @@ static void cb_collect_expired(const Record* rec) {
 }
 
 /* ====================================================================
- *  ���ݽṹ������ �� ����
+ *  数据结构适配器 — 链表
  * ==================================================================== */
 
 static int list_ad_insert(void* ds, const Record* r) { return list_insert((LinkedList*)ds, r); }
@@ -137,7 +137,7 @@ static void list_ad_traverse(void* ds, void (*v)(const Record*)) { list_traverse
 static void list_ad_destroy(void* ds) { list_destroy((LinkedList*)ds); }
 
 /* ====================================================================
- *  ���ݽṹ������ �� AVL��
+ *  数据结构适配器 — AVL树
  * ==================================================================== */
 
 static int avl_ad_insert(void* ds, const Record* r) { return avl_insert((AvlTree*)ds, r); }
@@ -148,7 +148,7 @@ static void avl_ad_traverse(void* ds, void (*v)(const Record*)) { avl_traverse((
 static void avl_ad_destroy(void* ds) { avl_destroy((AvlTree*)ds); }
 
 /* ====================================================================
- *  ���ݽṹ������ �� ��ϣ��
+ *  数据结构适配器 — 哈希表
  * ==================================================================== */
 
 static int hash_ad_insert(void* ds, const Record* r) { return hash_insert((HashTable*)ds, r); }
@@ -159,7 +159,7 @@ static void hash_ad_traverse(void* ds, void (*v)(const Record*)) { hash_traverse
 static void hash_ad_destroy(void* ds) { hash_destroy((HashTable*)ds); }
 
 /* ====================================================================
- *  ���ݽṹ������ �� ��̬����
+ *  数据结构适配器 — 动态数组
  * ==================================================================== */
 
 static int darr_ad_insert(void* ds, const Record* r) { return darray_insert((DynamicArray*)ds, r); }
@@ -170,7 +170,7 @@ static void darr_ad_traverse(void* ds, void (*v)(const Record*)) { darray_traver
 static void darr_ad_destroy(void* ds) { darray_destroy((DynamicArray*)ds); }
 
 /* ====================================================================
- *  �󶨺���ָ���
+ *  绑定函数指针表
  * ==================================================================== */
 
 static void bind_list(DataStore* st) {
@@ -202,7 +202,7 @@ static void bind_darr(DataStore* st) {
 }
 
 /* ====================================================================
- *  ���� API �� ��������
+ *  公开 API — 基础操作
  * ==================================================================== */
 
 DataStore* ds_create(enum StoreType type) {
@@ -262,18 +262,18 @@ int ds_size(DataStore* store) {
 }
 
 const char* ds_type_name(DataStore* store) {
-    if (!store) return "δ֪";
+    if (!store) return "未知";
     switch (store->type) {
-        case STORE_LINKED_LIST:   return "����";
-        case STORE_AVL_TREE:      return "AVL��";
-        case STORE_HASH_TABLE:    return "��ϣ��";
-        case STORE_DYNAMIC_ARRAY: return "��̬����";
-        default: return "δ֪";
+        case STORE_LINKED_LIST:   return "链表";
+        case STORE_AVL_TREE:      return "AVL树";
+        case STORE_HASH_TABLE:    return "哈希表";
+        case STORE_DYNAMIC_ARRAY: return "动态数组";
+        default: return "未知";
     }
 }
 
 /* ====================================================================
- *  ���� API �� ����
+ *  公开 API — 导出
  * ==================================================================== */
 
 LinkedList* ds_export_to_list(DataStore* store) {
@@ -303,7 +303,7 @@ Record* ds_export_array(DataStore* store, int* out_count) {
 }
 
 /* ====================================================================
- *  ���� API �� �л����ݽṹ
+ *  公开 API — 切换数据结构
  * ==================================================================== */
 
 int ds_switch_type(DataStore* store, enum StoreType new_type) {
@@ -366,7 +366,7 @@ int ds_switch_type(DataStore* store, enum StoreType new_type) {
 }
 
 /* ====================================================================
- *  ���� API �� ��������ɾ��������
+ *  公开 API — 分类批量删除：计数
  * ==================================================================== */
 
 int ds_count_by_student(DataStore* store, const char* sid) {
@@ -421,7 +421,7 @@ int ds_count_expired(DataStore* store, const char* base_date, int years) {
 }
 
 /* ====================================================================
- *  ���� API �� ��������ɾ����ִ��
+ *  公开 API — 分类批量删除：执行
  * ==================================================================== */
 
 int ds_delete_by_student(DataStore* store, const char* sid) {

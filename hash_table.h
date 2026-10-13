@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#define HASH_SIZE 10007  /* ��ϣͰ������������ */
+#define HASH_SIZE 10007  /* 哈希桶数量（质数） */
 
 typedef struct HashNode {
     Record data;

@@ -30,7 +30,7 @@ static int darray_grow(DynamicArray* arr) {
     return OK;
 }
 
-/* ���ֲ��ң�����ƥ���¼��������δ�ҵ����� -1 */
+/* 二分查找：返回匹配记录的索引，未找到返回 -1 */
 static int binary_search(DynamicArray* arr, const char* sid, const char* cid) {
     int low = 0;
     int high = arr->size - 1;
@@ -50,14 +50,14 @@ static int binary_search(DynamicArray* arr, const char* sid, const char* cid) {
     return -1;
 }
 
-/* ���룺���ְ���������ʹ�ò�������λ�� */
+/* 插入：保持按主键有序，使用插入排序位置 */
 int darray_insert(DynamicArray* arr, const Record* rec) {
     int pos;
     int i;
 
     if (!arr || !rec) return ERROR;
 
-    /* ���ֲ��Ҳ���λ�� */
+    /* 二分查找插入位置 */
     {
         int low = 0;
         int high = arr->size - 1;
@@ -72,12 +72,12 @@ int darray_insert(DynamicArray* arr, const Record* rec) {
         }
     }
 
-    /* �������������� */
+    /* 容量不足则扩容 */
     if (arr->size >= arr->capacity) {
         if (darray_grow(arr) != OK) return ERROR;
     }
 
-    /* �� pos ֮���Ԫ�غ���һλ */
+    /* 将 pos 之后的元素后移一位 */
     for (i = arr->size; i > pos; i--) {
         arr->data[i] = arr->data[i - 1];
     }
@@ -87,7 +87,7 @@ int darray_insert(DynamicArray* arr, const Record* rec) {
     return OK;
 }
 
-/* ɾ�� */
+/* 删除 */
 int darray_delete(DynamicArray* arr, const char* sid, const char* cid) {
     int idx;
     int i;
@@ -97,7 +97,7 @@ int darray_delete(DynamicArray* arr, const char* sid, const char* cid) {
     idx = binary_search(arr, sid, cid);
     if (idx < 0) return NOT_FOUND;
 
-    /* �� idx ֮���Ԫ��ǰ��һλ */
+    /* 将 idx 之后的元素前移一位 */
     for (i = idx; i < arr->size - 1; i++) {
         arr->data[i] = arr->data[i + 1];
     }
@@ -105,7 +105,7 @@ int darray_delete(DynamicArray* arr, const char* sid, const char* cid) {
     return OK;
 }
 
-/* �޸ĳɼ� */
+/* 修改成绩 */
 int darray_update(DynamicArray* arr, const char* sid, const char* cid, int new_score) {
     int idx;
     if (!arr || !sid || !cid) return ERROR;
@@ -115,7 +115,7 @@ int darray_update(DynamicArray* arr, const char* sid, const char* cid, int new_s
     return OK;
 }
 
-/* ���� */
+/* 查找 */
 Record* darray_find(DynamicArray* arr, const char* sid, const char* cid) {
     int idx;
     if (!arr || !sid || !cid) return NULL;
@@ -124,7 +124,7 @@ Record* darray_find(DynamicArray* arr, const char* sid, const char* cid) {
     return &arr->data[idx];
 }
 
-/* ������������Ȼ����ֱ��˳�������Ϊ��������� */
+/* 遍历（数组天然有序，直接顺序遍历即为有序输出） */
 void darray_traverse(DynamicArray* arr, void (*visit)(const Record*)) {
     int i;
     if (!arr || !visit) return;

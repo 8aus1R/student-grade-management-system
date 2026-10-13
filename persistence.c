@@ -4,7 +4,7 @@
   #include <direct.h>
 #endif
 
-/* ========== �ڲ�������ȥ�� ="..." ���� ========== */
+/* ========== 内部辅助：去除 ="..." 包裹 ========== */
 
 static void strip_csv_wrapper(char* str) {
     int len;
@@ -17,7 +17,7 @@ static void strip_csv_wrapper(char* str) {
     }
 }
 
-/* ========== ����CSV ========== */
+/* ========== 加载CSV ========== */
 
 int load_from_csv(LinkedList* list, const char* filename) {
     FILE* fp;
@@ -85,7 +85,7 @@ int load_from_csv(LinkedList* list, const char* filename) {
     return count;
 }
 
-/* ========== ����CSV ========== */
+/* ========== 保存CSV ========== */
 
 int save_to_csv(LinkedList* list, const char* filename) {
     FILE* fp;
@@ -94,7 +94,7 @@ int save_to_csv(LinkedList* list, const char* filename) {
     fp = fopen(filename, "w");
     if (!fp) return ERROR;
 
-    fprintf(fp, "ѧ��,����,ѧԺ,�γ̱��,�γ�����,ѧ��,ѡ��ѧ��,ѡ������,�ɼ�\n");
+    fprintf(fp, "学号,姓名,学院,课程编号,课程名称,学分,选课学期,选课日期,成绩\n");
 
     cur = list->head;
     while (cur) {
@@ -115,7 +115,7 @@ int save_to_csv(LinkedList* list, const char* filename) {
     return OK;
 }
 
-/* ========== Ŀ¼���� ========== */
+/* ========== 目录管理 ========== */
 
 void ensure_directory(const char* dir) {
     struct stat st;
@@ -128,7 +128,7 @@ void ensure_directory(const char* dir) {
     }
 }
 
-/* ========== ɸѡ�ļ������� ========== */
+/* ========== 筛选文件名生成 ========== */
 
 void generate_filter_filename(const char* dir,
                               const char* criteria_desc,
