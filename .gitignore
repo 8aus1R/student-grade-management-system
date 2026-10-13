@@ -1,0 +1,21 @@
+# Build output
+*.exe
+student-grade-management-system
+*.o
+*.obj
+*.layout
+Makefile.win
+
+# Runtime data; may contain student identifiers and grades
+records.csv
+filtered_data/
+
+# Local development and generated material
+node_modules/
+output/
+tmp/
+tmp_*/
+graphify-out/
+.understand-anything/
+.agents/
+*.log
